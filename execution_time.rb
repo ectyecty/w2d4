@@ -50,3 +50,73 @@ def largest_sum_better(list)
   end
   largest_sum
 end
+
+# O(n!)
+def first_anagram?(string, target)
+  str_arr = string.split("")
+  anagrams_arr = str_arr.permutation.to_a
+  anagrams = anagrams_arr.map(&:join)
+
+  anagrams.include?(target)
+end
+
+# O(n^2)
+def second_anagram?(string, target)
+  first_array = string.split('')
+  target_array = target.split('')
+
+  until first_array.empty?
+    letter = first_array.first
+
+    if target_array.include?(letter)
+      idx = target_array.find_index(letter)
+      target_array.delete_at(idx)
+
+      jdx = first_array.find_index(letter)
+      first_array.delete_at(jdx)
+    else
+      return false
+    end
+  end
+
+  target_array.count == first_array.count
+end
+
+# O(n)
+def third_anagram?(start, target)
+  start_hash = Hash.new(0)
+  target_hash = Hash.new(0)
+
+  start.each_char do |letter|
+    start_hash[letter] += 1
+  end
+
+  target.each_char do |letter|
+    target_hash[letter] += 1
+  end
+
+  start_hash.keys.each do |key|
+    return false unless start_hash[key] == target_hash[key]
+  end
+  true
+end
+
+# O(n)
+def fourth_anagram?(start, target)
+  letter_hash = Hash.new(0)
+
+  start.each_char do |letter|
+    letter_hash[letter] += 1
+  end
+
+  target.each_char do |letter|
+    letter_hash[letter] -= 1
+  end
+
+  letter_hash.values.all? { |val| val == 0 }
+end
+
+# O(nlogn)
+def fifth_anagram?(start, target)
+  start.split("").sort == target.split("").sort
+end
