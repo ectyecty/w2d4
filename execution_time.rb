@@ -120,3 +120,58 @@ end
 def fifth_anagram?(start, target)
   start.split("").sort == target.split("").sort
 end
+
+# O(n^2)
+def bad_two_sum?(array, target)
+  idx = 0
+  while idx < array.count - 1
+    jdx = idx + 1
+    while jdx < array.count
+      return true if array[idx] + array[jdx] == target
+      jdx += 1
+    end
+    idx += 1
+  end
+  false
+end
+
+# O(nlogn)
+def ok_two_sum?(array, target)
+  fake_array = array.dup
+  until fake_array.empty?
+    num = fake_array.shift
+    return true unless bsearch(fake_array, target - num).nil?
+  end
+  false
+end
+
+def bsearch(array, target)
+  return nil if array.count == 0
+
+  mid = array.count / 2
+
+  if array[mid] == target
+    return mid
+  elsif target > array[mid]
+    top_half = bsearch(array.drop(mid + 1), target)
+    top_half.nil? ? nil : mid + 1 + top_half
+  elsif target < array[mid]
+    bsearch(array.take(mid), target)
+  end
+end
+
+# O(n)
+def pair_sum?(array, target)
+  sum_hash = Hash.new(0)
+
+  array.each do |num|
+    sum_hash[num] += 1
+  end
+
+  sum_hash.each do |num, count|
+    remainder = target - num
+    sum_hash[num] -= 1
+    return true if sum_hash[remainder] > 0
+  end
+  false
+end
